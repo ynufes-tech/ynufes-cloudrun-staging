@@ -1,0 +1,41 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+
+metadata:
+  name: "hp-stg"
+  labels:
+    cloud.googleapis.com/location: "asia-northeast1"
+  annotations:
+    run.googleapis.com/ingress: all
+
+spec:
+  template:
+    spec:
+      containers:
+        - image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/nginx:latest
+          name: frontend
+          ports:
+            - name: http1
+              containerPort: 80
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+        - image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/tokiwa23:latest
+          name: tokiwa23
+          env:
+            - name: PORT
+              value: "8080"
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+        - image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/seiryo23:latest
+          name: seiryo23
+          env:
+            - name: PORT
+              value: "8081"
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
