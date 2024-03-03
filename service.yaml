@@ -1,5 +1,14 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
+metadata:
+  name: hp-stg
+  namespace: '292061085119'
+  selfLink: /apis/serving.knative.dev/v1/namespaces/292061085119/services/hp-stg
+  labels:
+    cloud.googleapis.com/location: asia-northeast1
+  annotations:
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
 spec:
   template:
     metadata:
