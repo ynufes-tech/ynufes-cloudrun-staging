@@ -51,6 +51,7 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           metadata: ./service.yaml
+          region: asia-northeast1
 
       - name: Make CloudRun accessible
         run: |
