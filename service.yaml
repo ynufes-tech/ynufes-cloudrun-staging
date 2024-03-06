@@ -39,6 +39,15 @@ spec:
           failureThreshold: 1
           tcpSocket:
             port: 80
+      - name: seiryo24
+        image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/seiryo24:latest
+        env:
+          - name: PORT
+            value: '8241'
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
       - name: tokiwa23
         image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/tokiwa23:latest
         env:
