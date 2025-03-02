@@ -1,89 +1,80 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: hp-stg
-  namespace: '292061085119'
-  selfLink: /apis/serving.knative.dev/v1/namespaces/292061085119/services/hp-stg
-  labels:
-    cloud.googleapis.com/location: asia-northeast1
   annotations:
     run.googleapis.com/ingress: all
     run.googleapis.com/ingress-status: all
+    run.googleapis.com/urls: '["https://hp-stg-292061085119.asia-northeast1.run.app","https://hp-stg-54hsiiq5ra-an.a.run.app"]'
+  labels:
+    cloud.googleapis.com/location: asia-northeast1
+  name: hp-stg
+  namespace: '292061085119'
 spec:
   template:
     metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: '2'
+        run.googleapis.com/client-name: cloud-console
+        run.googleapis.com/startup-cpu-boost: 'false'
       labels:
         github_sha: test
         run.googleapis.com/startupProbeType: Default
-      annotations:
-        run.googleapis.com/client-name: cloud-console
-        autoscaling.knative.dev/maxScale: '3'
-        run.googleapis.com/startup-cpu-boost: 'false'
     spec:
       containerConcurrency: 80
-      timeoutSeconds: 300
-      serviceAccountName: 292061085119-compute@developer.gserviceaccount.com
       containers:
-      - name: frontend
-        image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/nginx:latest
+      - image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/nginx:latest
+        name: frontend
         ports:
-        - name: http1
-          containerPort: 80
+        - containerPort: 80
+          name: http1
         resources:
           limits:
             cpu: 1000m
             memory: 512Mi
         startupProbe:
-          timeoutSeconds: 240
-          periodSeconds: 240
           failureThreshold: 1
+          periodSeconds: 240
           tcpSocket:
             port: 80
-      - name: seiryo25
-        image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/seiryo25:latest
-        env:
-          - name: PORT
-            value: '8252'
-        resources:
-          limits:
-            cpu: 1000m
-            memory: 512Mi
-      - name: tokiwa24
+          timeoutSeconds: 240
+      - env:
+        - name: PORT
+          value: '8242'
         image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/tokiwa24:latest
-        env:
-          - name: PORT
-            value: '8242'
+        name: tokiwa24
         resources:
           limits:
             cpu: 1000m
             memory: 512Mi
-      - name: seiryo24
+      - env:
+        - name: PORT
+          value: '8241'
         image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/seiryo24:latest
-        env:
-          - name: PORT
-            value: '8241'
+        name: seiryo24
         resources:
           limits:
             cpu: 1000m
             memory: 512Mi
-      - name: tokiwa23
-        image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/tokiwa23:latest
-        env:
+      - env:
         - name: PORT
           value: '8080'
+        image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/tokiwa23:latest
+        name: tokiwa23
         resources:
           limits:
             cpu: 1000m
             memory: 512Mi
-      - name: seiryo23
-        image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/seiryo23:latest
-        env:
+      - env:
         - name: PORT
           value: '8081'
+        image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/seiryo23:latest
+        name: seiryo23
         resources:
           limits:
             cpu: 1000m
             memory: 512Mi
+      serviceAccountName: 292061085119-compute@developer.gserviceaccount.com
+      timeoutSeconds: 300
   traffic:
-  - percent: 100
-    latestRevision: true
+  - latestRevision: true
+    percent: 100
