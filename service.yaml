@@ -39,6 +39,15 @@ spec:
           timeoutSeconds: 240
       - env:
         - name: PORT
+          value: '8252'
+        image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/seiryo25:latest
+        name: seiryo25
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+      - env:
+        - name: PORT
           value: '8242'
         image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/tokiwa24:latest
         name: tokiwa24
