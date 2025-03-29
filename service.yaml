@@ -48,6 +48,15 @@ spec:
             memory: 512Mi
       - env:
         - name: PORT
+          value: '8251'
+        image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/welcome25:latest
+        name: welcome25
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      - env:
+        - name: PORT
           value: '8242'
         image: asia-northeast1-docker.pkg.dev/ynufes-hp-cloudrun/staging/tokiwa24:latest
         name: tokiwa24
