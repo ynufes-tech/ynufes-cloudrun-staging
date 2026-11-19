@@ -1,0 +1,13 @@
+{
+  "routes": {
+    "/25/tokiwa": 8253,
+    "/25/seiryo": 8252,
+    "/24/tokiwa": 8242,
+    "/24/seiryo": 8241,
+    "/23/tokiwa": 8080,
+    "/23/seiryo": 8081,
+    "/25/welcome": 8251
+  },
+  "root": "https://stg.ynu-fes.yokohama/25/tokiwa/",
+  "redirects": {}
+}

@@ -4,7 +4,12 @@ on:
     branches:
       - main
 jobs:
+  security:
+    uses: ./.github/workflows/security.yaml
+    permissions:
+      contents: read
   build-and-deploy:
+    needs: security
     runs-on: ubuntu-latest
     permissions:
       contents: read
