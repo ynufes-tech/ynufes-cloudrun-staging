@@ -1,0 +1,31 @@
+name: Container security and smoke tests
+on:
+  pull_request:
+  workflow_call:
+  workflow_dispatch:
+  schedule:
+    - cron: '19 0 * * 1'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Build image
+        run: docker build --pull --platform linux/amd64 -t nginx-security-test .
+      - name: Validate configuration and routing
+        run: |
+          docker run --rm nginx-security-test nginx -t
+          container=$(docker run -d nginx-security-test)
+          trap 'docker logs "$container"; docker rm -f "$container"' EXIT
+          docker run --rm --network "container:$container" \
+            -v "$PWD:/repo:ro" \
+            python:3.13-alpine@sha256:9ef1a599f863231c3d91e941389bfdc4a2d6070557243d54df1a4e57015b960e \
+            python /repo/tests/smoke.py
+      - name: Scan image for known vulnerabilities
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:0.71.1@sha256:53570e6911c2361ebe7995228088cf83a6b9b73e7f3cdca44bd8f8f425e80fa7 \
+            image --scanners vuln --exit-code 1 --severity MEDIUM,HIGH,CRITICAL nginx-security-test
